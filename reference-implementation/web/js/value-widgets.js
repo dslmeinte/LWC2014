@@ -1,6 +1,8 @@
-QLrt.BooleanInputWidget = function () {
+QLrt.BooleanValueWidget = function () {
 
-	var elt = QLrt.mk('input').attr('type', 'checkbox');
+	QLrt.Notifier.call(this);
+
+	var elt = QLrt.mk('input').attr('type', 'checkbox').change(this.changeCallback);
 
 	this.domElement = function () {
 		return elt;
@@ -15,12 +17,15 @@ QLrt.BooleanInputWidget = function () {
 	};
 
 };
+QLrt.BooleanValueWidget.prototype = Object.create(QLrt.Notifier.prototype);
 
 
-QLrt.MoneyInputWidget = function (options) {
+QLrt.MoneyValueWidget = function (options) {
+
+	QLrt.Notifier.call(this);
 
 	var /* val */ disabled = options && options.disabled;
-	var elt = QLrt.mk('input').attr('type', 'text').prop('disabled', disabled).autoNumeric('init');
+	var elt = QLrt.mk('input').attr('type', 'text').prop('disabled', disabled).autoNumeric('init').change(this.changeCallback);
 
 	this.domElement = function () {
 		return elt;
@@ -38,8 +43,13 @@ QLrt.MoneyInputWidget = function (options) {
 	};
 
 };
+QLrt.MoneyValueWidget.prototype = Object.create(QLrt.Notifier.prototype);
 
 
-QLrt.StringInputWidget = function () {};
+QLrt.StringValueWidget = function () {
 
+	QLrt.Notifier.call(this);
+
+};
+QLrt.StringValueWidget.prototype = Object.create(QLrt.Notifier.prototype);
 

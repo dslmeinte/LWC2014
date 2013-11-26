@@ -1,16 +1,10 @@
-/**
- * Convenience function wrapping $('<... class="...">).
- */
-QLrt.mk = function (tagName, className) {
-	var elt = $('<' + tagName + '></' + tagName + '>');
-	if (className !== undefined) {
-		elt.addClass(className);
-	}
-	return elt;
-};
-
-
 QLrt.FormWidget = function (settings) {
+
+	if (typeof (settings) !== 'object' || settings.name === undefined
+			|| settings.submitCallback === undefined
+			|| settings.updateCallback === undefined) {
+		throw "invalid or incomplete settings";
+	}
 
 	var outerContainer = QLrt.mk('div').hide().append(QLrt.mk('h2').text('Form: ' + settings.name));
 	var innerContainer = QLrt.mk('div', 'form').appendTo(outerContainer);
@@ -25,21 +19,20 @@ QLrt.FormWidget = function (settings) {
 	this.append = function (widget) {
 		children.push(widget);
 		innerContainer.append(widget.domElement());
+		if (widget instanceof QLrt.Notifier) {
+			widget.setListener(this);
+		}
 	};
 
-	this.rootWidget = function () {
-		return this;
+	this.globalUpdate = function () {
+		settings.updateCallback();
+		submitButton.prop('disabled', !this.complete());
 	};
 
 	this.activate = function () {
-		settings.render();	// initial rendering
+		this.globalUpdate();	// initial setting of correct visualization
 		outerContainer.show();
 	};
-
-	this.submittable = function (val) {
-		submitButton.prop('disabled', !val);
-	};
-	// TODO  make this auto-setting through this.complete() -- requires "bubbling up"
 
 	this.complete = function () {
 		return _.all(children, function (subWidget) { return subWidget.complete(); });
@@ -49,6 +42,8 @@ QLrt.FormWidget = function (settings) {
 
 
 QLrt.GroupWidget = function (settings) {
+
+	QLrt.Notifier.call(this);
 
 	var container = QLrt.mk('div', 'group');
 
@@ -61,6 +56,9 @@ QLrt.GroupWidget = function (settings) {
 	this.append = function (widget) {
 		children.push(widget);
 		container.append(widget.domElement());
+		if (widget instanceof QLrt.Notifier) {
+			widget.setListener(this);
+		}
 	};
 
 	this.appendTo = function (parent) {
@@ -80,12 +78,24 @@ QLrt.GroupWidget = function (settings) {
 	};
 
 };
+QLrt.GroupWidget.prototype = Object.create(QLrt.Notifier.prototype);
 
 
-QLrt.SimpleFormWidget = function (settings) {
+QLrt.SimpleFormElementWidget = function (settings) {
+
+	QLrt.Notifier.call(this);
+
+	if (typeof (settings) !== 'object' || settings.label === undefined
+			|| settings.value === undefined) {
+		throw "invalid or incomplete settings";
+	}
+
+	if (settings.value instanceof QLrt.Notifier) {
+		settings.value.setListener(this);
+	}
 
 	var outerContainer = QLrt.mk('div', 'simpleFormElement');
-	QLrt.mk('label').appendTo(outerContainer).append(settings.label).append(settings.input.domElement());
+	QLrt.mk('label').appendTo(outerContainer).append(settings.label).append(settings.value.domElement());
 
 	this.domElement = function () {
 		return outerContainer;
@@ -97,12 +107,15 @@ QLrt.SimpleFormWidget = function (settings) {
 	};
 
 	this.value = function () {
-		return settings.input.value();
+		return settings.value.value();
 	};
 
 	this.complete = function () {
-		return settings.input.complete();
+		return settings.value.complete();
 	};
 
 };
+QLrt.SimpleFormElementWidget.prototype = Object.create(QLrt.Notifier.prototype);
+
+
 
