@@ -16,8 +16,8 @@ QLrt.BaseValueWidget = function (options) {
 	this.domElement = function () {
 		if (elt === null) {
 			var self = this;
-			var /* val */ disabled = options && options.disabled;
-			elt = this.createElement().prop('disabled', disabled).change(self.changed);
+			var /* val */ derived = options && options.derived;
+			elt = this.createElement().prop('disabled', derived).change(self.changed);
 		}
 		return elt;
 	};
@@ -75,7 +75,7 @@ QLrt.MoneyValueWidget = function (options) {
 	};
 
 	this.setValue = function (val) {
-		this.domElement().autoNumeric('set', ( typeof(val) === 'number' ? val : "" ));
+		this.domElement().autoNumeric('set', ( val === null ? "" : val ));
 	};
 
 	this.complete = function () {

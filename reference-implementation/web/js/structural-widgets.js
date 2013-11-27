@@ -23,9 +23,6 @@ QLrt.FormWidget = function (settings) {
 	this.append = function (widget) {
 		children.push(widget);
 		innerContainer.append(widget.domElement());
-		if (widget instanceof QLrt.Child) {
-			widget.setParent(this);
-		}
 	};
 
 	this.changed = function () {
@@ -60,15 +57,6 @@ QLrt.GroupWidget = function (settings) {
 	this.append = function (widget) {
 		children.push(widget);
 		container.append(widget.domElement());
-		if (widget instanceof QLrt.Child) {
-			widget.setParent(this);
-		}
-	};
-
-	this.appendTo = function (parent) {
-		this.setParent(parent);
-		parent.append(this);
-		return this;	// for chaining
 	};
 
 	var visible_ = true;
@@ -96,7 +84,7 @@ QLrt.SimpleFormElementWidget = function (settings) {
 	}
 
 	if (settings.valueWidget instanceof QLrt.Child) {
-		settings.valueWidget.setParent(this);
+		settings.valueWidget.appendTo(this);
 	}
 
 	var outerContainer = QLrt.mk('div', 'simpleFormElement');
@@ -104,12 +92,6 @@ QLrt.SimpleFormElementWidget = function (settings) {
 
 	this.domElement = function () {
 		return outerContainer;
-	};
-
-	this.appendTo = function (parent) {
-		this.setParent(parent);
-		parent.append(this);
-		return this;	// for chaining
 	};
 
 	this.value = function () {
@@ -126,7 +108,4 @@ QLrt.SimpleFormElementWidget = function (settings) {
 
 };
 QLrt.SimpleFormElementWidget.prototype = Object.create(QLrt.Child.prototype);
-
-
-// TODO  introduce QLrt.BaseCompoundWidget having children
 
