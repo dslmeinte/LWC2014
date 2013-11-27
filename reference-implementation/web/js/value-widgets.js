@@ -11,13 +11,16 @@ QLrt.BaseValueWidget = function (options) {
 		throw "createElement not implemented";
 	};
 
+	function derived () {
+		return options && options.derived;
+	}
+
 	var elt = null;
 
 	this.domElement = function () {
 		if (elt === null) {
 			var self = this;
-			var /* val */ derived = options && options.derived;
-			elt = this.createElement().prop('disabled', derived).change(self.changed);
+			elt = this.createElement().prop('disabled', derived()).change(self.signalChange);
 		}
 		return elt;
 	};
@@ -32,6 +35,10 @@ QLrt.BaseValueWidget = function (options) {
 
 	this.complete = function () {
 		throw "complete not implemented";
+	};
+
+	this.update = function () {
+		// TODO  implement, i.e.: if derived, calculate new value
 	};
 
 };

@@ -37,8 +37,8 @@ QLrt.Child = function () {
 		return this;	// for chaining
 	};
 
-	this.changed = function () {
-		parent.changed();
+	this.signalChange = function () {
+		parent.signalChange();
 	};
 
 };
