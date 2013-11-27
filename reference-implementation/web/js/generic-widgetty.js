@@ -43,3 +43,16 @@ QLrt.Child = function () {
 
 };
 
+
+/**
+ * Hold on to your G^HMonads! ;)
+ */
+QLrt.LazyValue = function (inputs, expression) {
+
+	this.evaluate = function () {
+		var args = _.map(inputs, function (input) { return input.value(); });
+		return expression.apply(null, args);
+	};
+
+};
+

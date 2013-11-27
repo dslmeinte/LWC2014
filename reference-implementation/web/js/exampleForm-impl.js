@@ -27,6 +27,23 @@ $(document).ready(function() {
 			// TODO  introduce a Complete monad
 	}
 
+	var group2 = (new QLrt.GroupWidget(new QLrt.LazyValue(
+					function () { return [ hasSoldHouse ]; },
+					function (hasSoldHouse) { return hasSoldHouse; }
+				))).appendTo(form);
+	var valueResidue2 = (new QLrt.SimpleFormElementWidget({ label: "Value residue:", valueWidget: new QLrt.MoneyValueWidget(new QLrt.LazyValue(
+							function () { return [ sellingPrice, privateDebt ]; },
+							function (sellingPrice, privateDebt) { return sellingPrice - privateDebt; }
+						)) })).appendTo(group1);
+	/*
+	 * Now the question is how to trigger .evaluate of the QLrt.LazyValue-s
+	 * upon a change. The change can come from anywhere, not just (nested)
+	 * children.
+	 * 
+	 * 1st: trickle change signal up the tree;
+	 * 2nd: upon arriving @the root, pass it recursively down the tree, having everyone update itself.
+	 */
+
 	form.activate();
 
 });
