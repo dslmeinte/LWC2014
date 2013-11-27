@@ -45,7 +45,7 @@ QLrt.MoneyValueWidget = function (options) {
 		if (val === undefined) {
 			return elt.autoNumeric('get');
 		}
-		elt.autoNumeric('set', val);
+		elt.autoNumeric('set', ( typeof(val) === 'number' ? val : "" ));
 	};
 
 	this.complete = function () {

@@ -23,10 +23,8 @@ $(document).ready(function() {
 	// updates the entire view:
 	function update () {
 		group1.visible(hasSoldHouse.value());
-		if (sellingPrice.complete() && privateDebt.complete()) {
-			valueResidue.value(sellingPrice.value() - privateDebt.value());
-		}
-		// TODO  introduce a Complete monad
+		valueResidue.value(sellingPrice.complete() && privateDebt.complete() ? sellingPrice.value() - privateDebt.value() : null);
+			// TODO  introduce a Complete monad
 	}
 
 	form.activate();
