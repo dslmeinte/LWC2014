@@ -91,16 +91,16 @@ QLrt.SimpleFormElementWidget = function (settings) {
 	QLrt.Child.call(this);
 
 	if (typeof (settings) !== 'object' || settings.label === undefined
-			|| settings.value === undefined) {
+			|| settings.valueWidget === undefined) {
 		throw "invalid or incomplete settings";
 	}
 
-	if (settings.value instanceof QLrt.Child) {
-		settings.value.setParent(this);
+	if (settings.valueWidget instanceof QLrt.Child) {
+		settings.valueWidget.setParent(this);
 	}
 
 	var outerContainer = QLrt.mk('div', 'simpleFormElement');
-	QLrt.mk('label').appendTo(outerContainer).append(settings.label).append(settings.value.domElement());
+	QLrt.mk('label').appendTo(outerContainer).append(settings.label).append(settings.valueWidget.domElement());
 
 	this.domElement = function () {
 		return outerContainer;
@@ -112,14 +112,21 @@ QLrt.SimpleFormElementWidget = function (settings) {
 		return this;	// for chaining
 	};
 
-	this.value = function (val) {
-		return settings.value.value(val);
+	this.value = function () {
+		return settings.valueWidget.value();
+	};
+
+	this.setValue = function (val) {
+		return settings.valueWidget.setValue(val);
 	};
 
 	this.complete = function () {
-		return settings.value.complete();
+		return settings.valueWidget.complete();
 	};
 
 };
 QLrt.SimpleFormElementWidget.prototype = Object.create(QLrt.Child.prototype);
+
+
+// TODO  introduce QLrt.BaseCompoundWidget having children
 
