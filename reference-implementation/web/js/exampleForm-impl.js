@@ -23,8 +23,10 @@ $(document).ready(function() {
 	// updates the entire view:
 	function update () {
 		group1.visible(hasSoldHouse.value());
-		valueResidue.value(sellingPrice.complete() && privateDebt.complete() ? ( sellingPrice.value() - privateDebt.value() ) : undefined );
-		// (would like to use an Option monad for this)
+		if (sellingPrice.complete() && privateDebt.complete()) {
+			valueResidue.value(sellingPrice.value() - privateDebt.value());
+		}
+		// TODO  introduce a Complete monad
 	}
 
 	form.activate();

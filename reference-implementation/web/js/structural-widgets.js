@@ -1,3 +1,7 @@
+/*
+ * Widgets that take care of structure.
+ */
+
 QLrt.FormWidget = function (settings) {
 
 	if (typeof (settings) !== 'object' || settings.name === undefined
@@ -8,7 +12,7 @@ QLrt.FormWidget = function (settings) {
 
 	var outerContainer = QLrt.mk('div').hide().append(QLrt.mk('h2').text('Form: ' + settings.name));
 	var innerContainer = QLrt.mk('div', 'form').appendTo(outerContainer);
-	var submitButton = QLrt.mk('button').prop('disabled', true).appendTo(outerContainer).click(settings.onsubmit);
+	var submitButton = QLrt.mk('button').prop('disabled', true).append("Submit").appendTo(outerContainer).click(settings.onsubmit);
 
 	this.domElement = function () {
 		return outerContainer;
@@ -19,18 +23,18 @@ QLrt.FormWidget = function (settings) {
 	this.append = function (widget) {
 		children.push(widget);
 		innerContainer.append(widget.domElement());
-		if (widget instanceof QLrt.Notifier) {
-			widget.setListener(this);
+		if (widget instanceof QLrt.Child) {
+			widget.setParent(this);
 		}
 	};
 
-	this.globalUpdate = function () {
+	this.changed = function () {
 		settings.updateCallback();
 		submitButton.prop('disabled', !this.complete());
 	};
 
 	this.activate = function () {
-		this.globalUpdate();	// initial setting of correct visualization
+		this.changed();			// initial setting of correct visualization
 		outerContainer.show();
 	};
 
@@ -43,7 +47,7 @@ QLrt.FormWidget = function (settings) {
 
 QLrt.GroupWidget = function (settings) {
 
-	QLrt.Notifier.call(this);
+	QLrt.Child.call(this);
 
 	var container = QLrt.mk('div', 'group');
 
@@ -56,12 +60,13 @@ QLrt.GroupWidget = function (settings) {
 	this.append = function (widget) {
 		children.push(widget);
 		container.append(widget.domElement());
-		if (widget instanceof QLrt.Notifier) {
-			widget.setListener(this);
+		if (widget instanceof QLrt.Child) {
+			widget.setParent(this);
 		}
 	};
 
 	this.appendTo = function (parent) {
+		this.setParent(parent);
 		parent.append(this);
 		return this;	// for chaining
 	};
@@ -74,24 +79,24 @@ QLrt.GroupWidget = function (settings) {
 	};
 
 	this.complete = function () {
-		return visible_ && _.all(children, function (subWidget) { return subWidget.complete(); });
+		return !visible_ || _.all(children, function (subWidget) { return subWidget.complete(); });
 	};
 
 };
-QLrt.GroupWidget.prototype = Object.create(QLrt.Notifier.prototype);
+QLrt.GroupWidget.prototype = Object.create(QLrt.Child.prototype);
 
 
 QLrt.SimpleFormElementWidget = function (settings) {
 
-	QLrt.Notifier.call(this);
+	QLrt.Child.call(this);
 
 	if (typeof (settings) !== 'object' || settings.label === undefined
 			|| settings.value === undefined) {
 		throw "invalid or incomplete settings";
 	}
 
-	if (settings.value instanceof QLrt.Notifier) {
-		settings.value.setListener(this);
+	if (settings.value instanceof QLrt.Child) {
+		settings.value.setParent(this);
 	}
 
 	var outerContainer = QLrt.mk('div', 'simpleFormElement');
@@ -102,12 +107,13 @@ QLrt.SimpleFormElementWidget = function (settings) {
 	};
 
 	this.appendTo = function (parent) {
+		this.setParent(parent);
 		parent.append(this);
 		return this;	// for chaining
 	};
 
-	this.value = function () {
-		return settings.value.value();
+	this.value = function (val) {
+		return settings.value.value(val);
 	};
 
 	this.complete = function () {
@@ -115,7 +121,5 @@ QLrt.SimpleFormElementWidget = function (settings) {
 	};
 
 };
-QLrt.SimpleFormElementWidget.prototype = Object.create(QLrt.Notifier.prototype);
-
-
+QLrt.SimpleFormElementWidget.prototype = Object.create(QLrt.Child.prototype);
 

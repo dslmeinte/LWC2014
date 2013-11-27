@@ -18,16 +18,16 @@ QLrt.mk = function (tagName, className) {
 /**
  * Base type.
  */
-QLrt.Notifier = function () {
+QLrt.Child = function () {
 
-	var listener = null;
+	var parent = null;
 
-	this.setListener = function (listener_) {
-		listener = listener_;
+	this.setParent = function (parent_) {
+		parent = parent_;
 	};
 
-	this.changeCallback = function () {
-		listener.changed();
+	this.changed = function () {
+		parent.changed();
 	};
 
 };
