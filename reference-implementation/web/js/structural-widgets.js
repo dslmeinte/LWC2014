@@ -25,13 +25,20 @@ QLrt.FormWidget = function (settings) {
 		innerContainer.append(widget.domElement());
 	};
 
-	this.changed = function () {
+	var propagatingUpdateLatch = false;
+
+	this.signalChange = function () {
+		if (propagatingUpdateLatch) return;
+
 		settings.updateCallback();
 		submitButton.prop('disabled', !this.complete());
+		propagatingUpdateLatch = true;
+		_.each(children, function (subWidget) { subWidget.update(); });
+		propagatingUpdateLatch = false;
 	};
 
 	this.activate = function () {
-		this.changed();			// initial setting of correct visualization
+		this.signalChange();			// initial setting of correct visualization
 		outerContainer.show();
 	};
 
@@ -70,6 +77,11 @@ QLrt.GroupWidget = function (settings) {
 		return !visible_ || _.all(children, function (subWidget) { return subWidget.complete(); });
 	};
 
+	this.update = function () {
+		// TODO  update visibility from calculating expression value
+		_.each(children, function (subWidget) { subWidget.update(); });
+	};
+
 };
 QLrt.GroupWidget.prototype = Object.create(QLrt.Child.prototype);
 
@@ -104,6 +116,10 @@ QLrt.SimpleFormElementWidget = function (settings) {
 
 	this.complete = function () {
 		return settings.valueWidget.complete();
+	};
+
+	this.update = function () {
+		settings.valueWidget.update();
 	};
 
 };

@@ -24,7 +24,6 @@ $(document).ready(function() {
 	function update () {
 		group1.visible(hasSoldHouse.value());
 		valueResidue.setValue(sellingPrice.complete() && privateDebt.complete() ? sellingPrice.value() - privateDebt.value() : null);
-			// TODO  introduce a Complete monad
 	}
 
 	var group2 = (new QLrt.GroupWidget(new QLrt.LazyValue(
