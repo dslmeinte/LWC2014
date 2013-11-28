@@ -2,50 +2,48 @@
  * Implementations of ValueWidgets, i.e. widgets which holds and visualize a value.
  */
 
-
-QLrt.BaseValueWidget = function (options) {
+QLrt.BaseValueWidget = function (lazyValue) {
 
 	QLrt.Child.call(this);
 
 	this.createElement = function () {
-		throw "createElement not implemented";
+		throw 'createElement not implemented';
 	};
 
-	function derived () {
-		return options && options.derived;
-	}
+	this.derived = (lazyValue !== undefined);
 
 	var elt = null;
 
 	this.domElement = function () {
 		if (elt === null) {
-			var self = this;
-			elt = this.createElement().prop('disabled', derived()).change(self.signalChange);
+			elt = this.createElement().prop('disabled', this.derived).change(this.signalChange);
 		}
 		return elt;
 	};
 
 	this.value = function () {
-		throw "value not implemented";
+		throw 'value not implemented';
 	};
 
 	this.setValue = function (val) {
-		throw "setValue not implemented";
+		throw 'setValue not implemented';
 	};
 
 	this.complete = function () {
-		throw "complete not implemented";
+		throw 'complete not implemented';
 	};
 
 	this.update = function () {
-		// TODO  implement, i.e.: if derived, calculate new value
+		if (this.derived) {
+			this.setValue(lazyValue.evaluate());
+		}
 	};
 
 };
 QLrt.BaseValueWidget.prototype = Object.create(QLrt.Child.prototype);
 
 
-QLrt.BooleanValueWidget = function (options) {
+QLrt.BooleanValueWidget = function () {
 
 	QLrt.BaseValueWidget.call(this);
 
@@ -69,9 +67,9 @@ QLrt.BooleanValueWidget = function (options) {
 QLrt.BooleanValueWidget.prototype = Object.create(QLrt.Child.prototype);
 
 
-QLrt.MoneyValueWidget = function (options) {
+QLrt.MoneyValueWidget = function (lazyValue) {
 
-	QLrt.BaseValueWidget.call(this);
+	QLrt.BaseValueWidget.call(this, lazyValue);
 
 	this.createElement = function () {
 		return QLrt.mk('input').attr('type', 'text').autoNumeric('init');
@@ -82,11 +80,11 @@ QLrt.MoneyValueWidget = function (options) {
 	};
 
 	this.setValue = function (val) {
-		this.domElement().autoNumeric('set', ( val === null ? "" : val ));
+		this.domElement().autoNumeric('set', ( val === undefined ? '' : val ));
 	};
 
 	this.complete = function () {
-		return this.value() !== "";
+		return this.derived || (this.value() !== '');
 	};
 
 };

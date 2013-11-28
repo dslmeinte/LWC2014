@@ -1,18 +1,22 @@
 /*
- * Widgets that take care of structure.
+ * Widgets that take care of structure (but not of values).
  */
 
+/**
+ * A widget
+ */
 QLrt.FormWidget = function (settings) {
 
-	if (typeof (settings) !== 'object' || settings.name === undefined
-			|| settings.submitCallback === undefined
-			|| settings.updateCallback === undefined) {
-		throw "invalid or incomplete settings";
+	if (typeof (settings) !== 'object'
+			|| settings.name === undefined
+//			|| settings.submitCallback === undefined
+	) {
+		throw 'invalid or incomplete settings';
 	}
 
 	var outerContainer = QLrt.mk('div').hide().append(QLrt.mk('h2').text('Form: ' + settings.name));
 	var innerContainer = QLrt.mk('div', 'form').appendTo(outerContainer);
-	var submitButton = QLrt.mk('button').prop('disabled', true).append("Submit").appendTo(outerContainer).click(settings.onsubmit);
+	var submitButton = QLrt.mk('button').prop('disabled', true).append('Submit').appendTo(outerContainer).click(settings.onsubmit);
 
 	this.domElement = function () {
 		return outerContainer;
@@ -30,7 +34,6 @@ QLrt.FormWidget = function (settings) {
 	this.signalChange = function () {
 		if (propagatingUpdateLatch) return;
 
-		settings.updateCallback();
 		submitButton.prop('disabled', !this.complete());
 		propagatingUpdateLatch = true;
 		_.each(children, function (subWidget) { subWidget.update(); });
@@ -49,7 +52,7 @@ QLrt.FormWidget = function (settings) {
 };
 
 
-QLrt.GroupWidget = function (settings) {
+QLrt.GroupWidget = function (lazyValue) {
 
 	QLrt.Child.call(this);
 
@@ -78,8 +81,11 @@ QLrt.GroupWidget = function (settings) {
 	};
 
 	this.update = function () {
-		// TODO  update visibility from calculating expression value
-		_.each(children, function (subWidget) { subWidget.update(); });
+		var value = lazyValue.evaluate();
+		container.toggle(value);
+		if (value) {
+			_.each(children, function (subWidget) { subWidget.update(); });
+		}
 	};
 
 };
@@ -90,9 +96,10 @@ QLrt.SimpleFormElementWidget = function (settings) {
 
 	QLrt.Child.call(this);
 
-	if (typeof (settings) !== 'object' || settings.label === undefined
+	if (typeof (settings) !== 'object'
+			|| settings.label === undefined
 			|| settings.valueWidget === undefined) {
-		throw "invalid or incomplete settings";
+		throw 'invalid or incomplete settings';
 	}
 
 	if (settings.valueWidget instanceof QLrt.Child) {

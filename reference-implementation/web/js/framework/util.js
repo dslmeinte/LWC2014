@@ -24,7 +24,7 @@ QLrt.Child = function () {
 
 	this.setParent = function (parent_) {
 		if (parent !== null) {
-			throw "parent cannot be re-set";
+			throw 'parent cannot be re-set';
 		}
 		parent = parent_;
 	};
@@ -50,7 +50,7 @@ QLrt.Child = function () {
 QLrt.LazyValue = function (inputs, expression) {
 
 	this.evaluate = function () {
-		var args = _.map(inputs, function (input) { return input.value(); });
+		var args = _.map(inputs(), function (input) { return (input.complete() ? input.value() : undefined); });
 		return expression.apply(null, args);
 	};
 
