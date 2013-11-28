@@ -52,7 +52,7 @@ QLrt.FormWidget = function (settings) {
 };
 
 
-QLrt.GroupWidget = function (lazyValue) {
+QLrt.ConditionalGroupWidget = function (lazyValue) {
 
 	QLrt.Child.call(this);
 
@@ -89,7 +89,7 @@ QLrt.GroupWidget = function (lazyValue) {
 	};
 
 };
-QLrt.GroupWidget.prototype = Object.create(QLrt.Child.prototype);
+QLrt.ConditionalGroupWidget.prototype = Object.create(QLrt.Child.prototype);
 
 
 QLrt.SimpleFormElementWidget = function (settings) {

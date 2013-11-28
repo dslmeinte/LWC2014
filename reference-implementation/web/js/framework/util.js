@@ -47,10 +47,10 @@ QLrt.Child = function () {
 /**
  * Hold on to your G^HMonads! ;)
  */
-QLrt.LazyValue = function (inputs, expression) {
+QLrt.LazyValue = function (dependentValues, expression) {
 
 	this.evaluate = function () {
-		var args = _.map(inputs(), function (input) { return (input.complete() ? input.value() : undefined); });
+		var args = _.map(dependentValues(), function (wrappedValue) { return (wrappedValue.complete() ? wrappedValue.value() : undefined); });
 		return expression.apply(null, args);
 	};
 

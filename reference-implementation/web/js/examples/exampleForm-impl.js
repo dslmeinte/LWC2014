@@ -1,8 +1,5 @@
 $(document).ready(function() {
 
-	// enums are realized as arrays of string literals:
-	var quality = ['good', 'bad', "don't know"];
-
 	/*
 	 * The following code duplicates the structure and details of the example
 	 * model in the assignment's text.
@@ -12,7 +9,7 @@ $(document).ready(function() {
 	new QLrt.SimpleFormElementWidget({ name: "hasBoughtHouse", label: "Did you buy a house in 2010?", valueWidget: new QLrt.BooleanValueWidget() }).appendTo(form);
 	new QLrt.SimpleFormElementWidget({ name: "hasMaintLoan", label: "Did you enter a loan for maintenance/reconstruction?", valueWidget: new QLrt.BooleanValueWidget() }).appendTo(form);
 
-	var group1 = (new QLrt.GroupWidget(new QLrt.LazyValue(
+	var group1 = (new QLrt.ConditionalGroupWidget(new QLrt.LazyValue(
 			function () { return [ hasSoldHouse ]; },
 			function (hasSoldHouse) { return hasSoldHouse; }
 		))).appendTo(form);
