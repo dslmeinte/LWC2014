@@ -34,7 +34,7 @@ QLrt.FormWidget = function (settings) {
 	this.signalChange = function () {
 		if (propagatingUpdateLatch) return;
 
-		submitButton.prop('disabled', !this.complete());
+		submitButton.prop('disabled', !this.defined());
 		propagatingUpdateLatch = true;
 		_.each(children, function (subWidget) { subWidget.update(); });
 		propagatingUpdateLatch = false;
@@ -45,8 +45,8 @@ QLrt.FormWidget = function (settings) {
 		outerContainer.show();
 	};
 
-	this.complete = function () {
-		return _.all(children, function (subWidget) { return subWidget.complete(); });
+	this.defined = function () {
+		return _.all(children, function (subWidget) { return subWidget.defined(); });
 	};
 
 };
@@ -76,8 +76,8 @@ QLrt.ConditionalGroupWidget = function (lazyValue) {
 		container.toggle(val);
 	};
 
-	this.complete = function () {
-		return !visible_ || _.all(children, function (subWidget) { return subWidget.complete(); });
+	this.defined = function () {
+		return !visible_ || _.all(children, function (subWidget) { return subWidget.defined(); });
 	};
 
 	this.update = function () {
@@ -121,8 +121,8 @@ QLrt.SimpleFormElementWidget = function (settings) {
 		return settings.valueWidget.setValue(val);
 	};
 
-	this.complete = function () {
-		return settings.valueWidget.complete();
+	this.defined = function () {
+		return settings.valueWidget.defined();
 	};
 
 	this.update = function () {

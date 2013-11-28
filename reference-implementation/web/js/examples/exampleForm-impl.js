@@ -17,7 +17,7 @@ $(document).ready(function() {
 	var privateDebt = (new QLrt.SimpleFormElementWidget({ name: "privateDebt", label: "Private debts for the sold house:", valueWidget: new QLrt.MoneyValueWidget() })).appendTo(group1);
 	(new QLrt.SimpleFormElementWidget({ label: "Value residue:", valueWidget: new QLrt.MoneyValueWidget(new QLrt.LazyValue(
 			function () { return [ sellingPrice, privateDebt ]; },
-			function (sellingPrice, privateDebt) { return (sellingPrice === undefined || privateDebt === undefined ? undefined : sellingPrice - privateDebt); }
+			function (sellingPrice, privateDebt) { return sellingPrice - privateDebt; }
 		)) })).appendTo(group1);
 
 	// add to DOM:

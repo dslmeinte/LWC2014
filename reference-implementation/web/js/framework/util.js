@@ -44,14 +44,18 @@ QLrt.Child = function () {
 };
 
 
-/**
- * Hold on to your G^HMonads! ;)
- */
-QLrt.LazyValue = function (dependentValues, expression) {
+QLrt.LazyValue = function (dependentValues, expression, funky) {
 
 	this.evaluate = function () {
-		var args = _.map(dependentValues(), function (wrappedValue) { return (wrappedValue.complete() ? wrappedValue.value() : undefined); });
-		return expression.apply(null, args);
+		var values = dependentValues();
+		if (funky) {
+			var args = _.map(values, function (wrappedValue) { return (wrappedValue.defined() ? wrappedValue.value() : undefined); });
+			return expression.apply(undefined, args);
+		}
+		if (!_.all(values, function (wrappedValue) { return wrappedValue.defined(); })) {
+			return undefined;
+		}
+		return expression.apply(undefined, _.map(values, function (wrappedValue) { return wrappedValue.value(); }));
 	};
 
 };

@@ -29,8 +29,8 @@ QLrt.BaseValueWidget = function (lazyValue) {
 		throw 'setValue not implemented';
 	};
 
-	this.complete = function () {
-		throw 'complete not implemented';
+	this.defined = function () {
+		throw 'defined not implemented';
 	};
 
 	this.update = function () {
@@ -59,7 +59,7 @@ QLrt.BooleanValueWidget = function () {
 		this.domElement().prop('checked', val);
 	};
 
-	this.complete = function () {
+	this.defined = function () {
 		return true;
 	};
 
@@ -83,7 +83,7 @@ QLrt.MoneyValueWidget = function (lazyValue) {
 		this.domElement().autoNumeric('set', ( val === undefined ? '' : val ));
 	};
 
-	this.complete = function () {
+	this.defined = function () {
 		return this.derived || (this.value() !== '');
 	};
 
