@@ -12,6 +12,7 @@ Specifically, it implements the example questionnaire shown in the assignment.
 Particular **TODO**s:
 
 * Styling of widgets, through ```web/css/QL.css```.
+* Implementation of more value widgets: currently only implemented for boolean, money and string, not: enum, integer, etc.
 * More documentation of the framework, also as JSdoc.
 
 
