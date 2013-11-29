@@ -10,13 +10,13 @@ QLrt.BaseValueWidget = function (lazyValue) {
 		throw 'createElement not implemented';
 	};
 
-	this.derived = (lazyValue !== undefined);
+	this.computed = (lazyValue !== undefined);
 
 	var elt = null;
 
 	this.domElement = function () {
 		if (elt === null) {
-			elt = this.createElement().prop('disabled', this.derived).change(this.signalChange);
+			elt = this.createElement().prop('disabled', this.computed).change(this.signalChange);
 		}
 		return elt;
 	};
@@ -34,7 +34,7 @@ QLrt.BaseValueWidget = function (lazyValue) {
 	};
 
 	this.update = function () {
-		if (this.derived) {
+		if (this.computed) {
 			this.setValue(lazyValue.evaluate());
 		}
 	};
@@ -84,7 +84,7 @@ QLrt.MoneyValueWidget = function (lazyValue) {
 	};
 
 	this.defined = function () {
-		return this.derived || (this.value() !== '');
+		return this.computed || (this.value() !== '');
 	};
 
 };

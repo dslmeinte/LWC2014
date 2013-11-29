@@ -9,14 +9,14 @@ QLrt.FormWidget = function (settings) {
 
 	if (typeof (settings) !== 'object'
 			|| settings.name === undefined
-//			|| settings.submitCallback === undefined
+			|| settings.submitCallback === undefined
 	) {
 		throw 'invalid or incomplete settings';
 	}
 
 	var outerContainer = QLrt.mk('div').hide().append(QLrt.mk('h2').text('Form: ' + settings.name));
 	var innerContainer = QLrt.mk('div', 'form').appendTo(outerContainer);
-	var submitButton = QLrt.mk('button').prop('disabled', true).append('Submit').appendTo(outerContainer).click(settings.onsubmit);
+	var submitButton = QLrt.mk('button').prop('disabled', true).append('Submit').appendTo(outerContainer).click(settings.submitCallback);
 
 	this.domElement = function () {
 		return outerContainer;
@@ -34,10 +34,11 @@ QLrt.FormWidget = function (settings) {
 	this.signalChange = function () {
 		if (propagatingUpdateLatch) return;
 
-		submitButton.prop('disabled', !this.defined());
 		propagatingUpdateLatch = true;
 		_.each(children, function (subWidget) { subWidget.update(); });
 		propagatingUpdateLatch = false;
+
+		submitButton.prop('disabled', !this.defined());
 	};
 
 	this.activate = function () {
@@ -47,6 +48,16 @@ QLrt.FormWidget = function (settings) {
 
 	this.defined = function () {
 		return _.all(children, function (subWidget) { return subWidget.defined(); });
+	};
+
+	this.asJSON = function () {
+		var result = {};
+
+		_.each(children, function (subWidget) {
+			_.extend(result, subWidget.asJSON());
+		});
+
+		return result;
 	};
 
 };
@@ -69,15 +80,8 @@ QLrt.ConditionalGroupWidget = function (lazyValue) {
 		container.append(widget.domElement());
 	};
 
-	var visible_ = true;
-
-	this.visible = function (val) {
-		visible_ = val;
-		container.toggle(val);
-	};
-
 	this.defined = function () {
-		return !visible_ || _.all(children, function (subWidget) { return subWidget.defined(); });
+		return !lazyValue.evaluate() || _.all(children, function (subWidget) { return subWidget.defined(); });
 	};
 
 	this.update = function () {
@@ -86,6 +90,18 @@ QLrt.ConditionalGroupWidget = function (lazyValue) {
 		if (value) {
 			_.each(children, function (subWidget) { subWidget.update(); });
 		}
+	};
+
+	this.asJSON = function () {
+		var result = {};
+
+		if (lazyValue.evaluate()) {
+			_.each(children, function (subWidget) {
+				_.extend(result, subWidget.asJSON());
+			});
+		}
+
+		return result;
 	};
 
 };
@@ -127,6 +143,16 @@ QLrt.SimpleFormElementWidget = function (settings) {
 
 	this.update = function () {
 		settings.valueWidget.update();
+	};
+
+	this.asJSON = function () {
+		var result = {};
+
+		if (!settings.valueWidget.computed) {
+			result[settings.name] = this.value();
+		}
+
+		return result;
 	};
 
 };
