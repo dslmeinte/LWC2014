@@ -21,6 +21,11 @@ $(document).ready(function() {
 			new QLrt.LazyValue(function () { return [ dateValue ]; }, function (dateValue) { return dateValue !== undefined; }, true)
 		) }).appendTo(form);
 
+	var integerValue = new QLrt.SimpleFormElementWidget({ name: "integer value", label: "Integer value:", valueWidget: new QLrt.IntegerValueWidget() }).appendTo(form);
+	new QLrt.SimpleFormElementWidget({ label: "integer value defined?", valueWidget: new QLrt.BooleanValueWidget(
+			new QLrt.LazyValue(function () { return [ integerValue ]; }, function (integerValue) { return integerValue !== undefined; }, true)
+		) }).appendTo(form);
+
 	$('#QL-content').append(form.domElement());
 	form.activate();
 
