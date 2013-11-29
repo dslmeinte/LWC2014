@@ -123,3 +123,45 @@ QLrt.StringValueWidget = function (lazyValue) {
 QLrt.StringValueWidget.prototype = Object.create(QLrt.BaseValueWidget.prototype);
 
 
+QLrt.EnumValueWidget = function (enumeration, lazyValue) {
+
+	QLrt.BaseValueWidget.call(this, lazyValue);
+
+	var optionElements = {};
+
+	this.createElement = function () {
+		var select = QLrt.mk('select', 'enum-widget');
+
+		QLrt.mk('option').append("Make a choice").appendTo(select);
+
+		_.each(enumeration, function (literal) {
+			var option = QLrt.mk('option').append(literal).appendTo(select);
+			optionElements[literal] = option;
+		});
+
+		return select;
+	};
+
+	this.setValue = function (val) {
+		_.each(optionElements, function (option, literal) {
+			option.prop('selected', val === literal);
+		});
+	};
+
+	this.valueInternal = function () {
+		var result = undefined;
+		_.each(optionElements, function (option, literal) {
+			if (option.prop('selected')) {
+				result = literal;
+			}
+		});
+		return result;
+	};
+
+	this.definedInternal = function () {
+		return (this.valueInternal() !== undefined);
+	};
+
+};
+QLrt.EnumValueWidget.prototype = Object.create(QLrt.BaseValueWidget.prototype);
+

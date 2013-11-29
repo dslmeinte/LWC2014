@@ -111,6 +111,8 @@ These objects are both widgets and value wrappers: they are rendered as well as 
 A value widget is JS constructor, taking an optional ```LazyValue``` argument - lazy values are discussed below.
 This is actually the only API you need to know about to build forms.
 
+If a lazy value is given, the form element is regarded to be _computed_ which results in the input element being disabled and the value not passed into the form data object upon submitting the form.
+
 #### Roling your own
 
 For both QL and especially QLS we need several value widgets.
@@ -172,7 +174,8 @@ Note that sellingPrice and/or privateDebt might be ```undefined```.
 However, since this lazy value is "non-funky" (3rd parameter not present, thus not set to true), first all dependent (wrapped) values are checked for definedness.
 If they're not all defined, the expression evaluates to ```undefined```.
 One only has to use "funky" when for some combinations/ranges of input, it doesn't matter whether a value is undefined,
-e.g. using shortcutting boolean operators, and/or in pathological cases such as multiplying with 0.
+(e.g. using shortcutting boolean operators, and/or in pathological cases such as multiplying with 0),
+or when some expression explicitly depends on an input being defined or not.
 
 The reason for using a dependent values _function_, instead of direct references to variables,
 is that it relieves the form builder of the need to make sure widgets are instantiated before they're referenced in an expression function.
