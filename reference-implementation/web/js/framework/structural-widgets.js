@@ -16,7 +16,7 @@ QLrt.FormWidget = function (settings) {
 
 	var outerContainer = QLrt.mk('div').hide().append(QLrt.mk('h2').text('Form: ' + settings.name));
 	var innerContainer = QLrt.mk('div', 'form').appendTo(outerContainer);
-	var submitButton = QLrt.mk('button').prop('disabled', true).append('Submit').appendTo(outerContainer).click(settings.submitCallback);
+	var submitButton = QLrt.mk('button').prop('disabled', true).append('Submit').appendTo(outerContainer).click(function () { settings.submitCallback(asJSON()); });
 
 	this.domElement = function () {
 		return outerContainer;
@@ -38,7 +38,7 @@ QLrt.FormWidget = function (settings) {
 		_.each(children, function (subWidget) { subWidget.update(); });
 		propagatingUpdateLatch = false;
 
-		submitButton.prop('disabled', !this.defined());
+		submitButton.prop('disabled', !complete());
 	};
 
 	this.activate = function () {
@@ -46,11 +46,11 @@ QLrt.FormWidget = function (settings) {
 		outerContainer.show();
 	};
 
-	this.defined = function () {
+	function complete () {
 		return _.all(children, function (subWidget) { return subWidget.defined(); });
-	};
+	}
 
-	this.asJSON = function () {
+	function asJSON () {
 		var result = {};
 
 		_.each(children, function (subWidget) {
@@ -58,7 +58,7 @@ QLrt.FormWidget = function (settings) {
 		});
 
 		return result;
-	};
+	}
 
 };
 

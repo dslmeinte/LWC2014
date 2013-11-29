@@ -1,8 +1,3 @@
-/*
- * Some generic code useful for doing "widgetty stuff"...
- */
-
-
 /**
  * Convenience function wrapping $('<... class="...">).
  */
@@ -16,7 +11,7 @@ QLrt.mk = function (tagName, className) {
 
 
 /**
- * Base type.
+ * Base type for children.
  */
 QLrt.Child = function () {
 
@@ -44,6 +39,10 @@ QLrt.Child = function () {
 };
 
 
+/**
+ * A class for lazily-evaluated expressions, by default taking care of the
+ * undefined-logic.
+ */
 QLrt.LazyValue = function (dependentValues, expression, funky) {
 
 	this.evaluate = function () {

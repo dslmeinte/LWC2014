@@ -7,13 +7,12 @@ Specifically, it implements the example questionnaire shown in the assignment.
 
 ## Status
 
-**Status of implementation**: under construction, work-in-progress, not complete!
+**Status of implementation**: under construction/work-in-progress/not complete, but releasable
 
 Particular **TODO**s:
 
-* Storing of completed form as JSON in the HTML5 LocalStorage.
 * Styling of widgets, through ```web/css/QL.css```.
-* More documentation of the framework (as JSdoc).
+* More documentation of the framework, also as JSdoc.
 
 
 ## Disclaimer
@@ -64,10 +63,9 @@ Characteristics:
 * Technology: HTML5, i.e. HTML+JavaScript+CSS
 * Widget-based: the input elements render into the DOM and encapsulate required logic
 * Reactive: input elements signal when their input has changed, so changes can be propagated
-* Storage: ```localstorage``` is used to store the questionnaire input (as JSON) - *not yet implemented*
 
 All framework objects (functions) are properties of the global ```QLrt``` (QL run time) object.
-In the rest of the text, the ```QLrt.``` prefix is assumed to be implicit.
+In the rest of the text, the ```QLrt.``` prefix is assumed to be implicit when referencing types.
 
 ### Structural widgets
 
@@ -75,14 +73,32 @@ There are 3 widgets which are structural in the sense that they define the form 
 but don't say anything about the values in it.
 
 * ```FormWidget```: The base widget for one whole form, acting as a controller for it. It has ```ConditionalGroupWidget```s and ```SimpleFormElementWidget```s as children.
+* ```SimpleFormElementWidget```: Corresponds to a label and a value (passed as an appropriate value widget) in the UI. It composes a value widget, but not other widgets.
 * ```ConditionalGroupWidget```: Corresponds to a grouping of other widgets, where the visibility and applicability of the whole group is governed by an expression. It can have other ```ConditionalGroupWidget```s and ```SimpleFormElementWidget```s as children.
-* ```SimpleFormElementWidget```: Corresponds to a label and a value (passed as an appropriate value widget) in the UI. It only composes value widgets, not other widgets.
 
 Both ```ConditionalGroupWidget``` and ```SimpleFormElementWidget``` are instances (sub types) of ```Child```.
 
 #### API
 
-**TODO**  document API and subclassing from ```BaseValueWidget```
+The ```FormWidget``` constructor takes a settings object with a String ```name``` and a callback function ```submitCallback```.
+If the form is complete, as defined by all its children being _defined_, then the submit button is enabled and, when clicked,
+the callback function is called with an object holding the form data.
+
+```FormWidget``` has the following API methods:
+
+* ```domElement```: returns the DOM element containing the whole form tree;
+* ```activate```: activates the form widget, i.e. makes it visible in a valid state.
+
+The ```SimpleFormElementWidget``` constructor takes a settings object with the following:
+
+* a required String ```label```, used in the UI;
+* a required value widget object ```valueWidget```;
+* a String ```name``` that's only required when the value widget is not computed - the name is only used for composing the form data object.
+
+The ```SimpleFormElementWidget``` and ```ConditionalGroupWidget``` widgets both have one API method: ```appendTo``` appends the widget itself to a parent widget, returning itself for chaining.
+
+The ```ConditionalGroupWidget``` constructor takes a required lazy value which governs when the widgets composed by the instance are visible/in scope.
+
 
 ### Value widgets
 
@@ -91,11 +107,41 @@ These objects are both widgets and value wrappers: they are rendered as well as 
 
 #### API
 
-**TODO**  document API and subclassing from ```BaseValueWidget```
+A value widget is JS constructor, taking an optional ```LazyValue``` argument - lazy values are discussed below.
+This is actually the only API you need to know about to build forms.
 
 #### Roling your own
 
-**TODO**  document subclassing from ```BaseValueWidget```
+For both QL and especially QLS we need several value widgets.
+To create your own, follow the following template (fill in the TODOs):
+
+```
+
+QLrt.MyValueWidget = function (lazyValue) {
+
+	QLrt.BaseValueWidget.call(this, lazyValue);
+
+	this.createElement = function () {
+		return /* TODO  a jQuery-wrapped DOM element holding the tree for the widget */;
+	};
+
+	this.setValue = function (val) {
+		/* TODO  set value of this.domElement() */;
+	};
+
+	this.valueInternal = function () {
+		return /* TODO  the value retrieved from this.domElement(), DISREGARDING definedness logic */;
+	};
+
+	this.definedInternal = function () {
+		return /* TODO  whether this.valueInternal() represents a defined value */;
+	};
+
+}
+QLrt.MyValueWidget.prototype = Object.create(QLrt.BaseValueWidget.prototype);
+
+```
+
 
 ### Lazy values
 
@@ -124,5 +170,11 @@ Line 5 is the _expression_ function.
 Note that sellingPrice and/or privateDebt might be ```undefined```.
 However, since this lazy value is "non-funky" (3rd parameter not present, thus not set to true), first all dependent (wrapped) values are checked for definedness.
 If they're not all defined, the expression evaluates to ```undefined```.
-One only has to use "funky" when e.g. using shortcutting boolean operators, or in pathological cases such as multiplying with 0.
+One only has to use "funky" when for some combinations/ranges of input, it doesn't matter whether a value is undefined,
+e.g. using shortcutting boolean operators, and/or in pathological cases such as multiplying with 0.
+
+The reason for using a dependent values _function_, instead of direct references to variables,
+is that it relieves the form builder of the need to make sure widgets are instantiated before they're referenced in an expression function.
+This is particularly necessary because of the _variable hoisting_ that JS does.
+The other reason is that it makes the expression function's code look much better, because it's not (always) necessary to test for definedness and postfix with ```.value()```.
 

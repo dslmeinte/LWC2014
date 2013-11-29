@@ -22,11 +22,11 @@ $(document).ready(function() {
 
 	// (The above'd probably look better in CoffeeScript...)
 
-	$('#QL-content').append(form.domElement());		// add to DOM
+	$('#QL-content').append(form.domElement());
 	form.activate();
 
-	function persist () {
-		localStorage['QL-persist'] = form.asJSON();
+	function persist (data) {
+		localStorage['QL-persist'] = JSON.stringify(data);
 	}
 
 });

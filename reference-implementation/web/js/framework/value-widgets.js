@@ -22,15 +22,11 @@ QLrt.BaseValueWidget = function (lazyValue) {
 	};
 
 	this.value = function () {
-		throw 'value not implemented';
-	};
-
-	this.setValue = function (val) {
-		throw 'setValue not implemented';
+		return (this.defined() ? this.valueInternal() : undefined);
 	};
 
 	this.defined = function () {
-		throw 'defined not implemented';
+		return this.computed || this.definedInternal();
 	};
 
 	this.update = function () {
@@ -39,32 +35,44 @@ QLrt.BaseValueWidget = function (lazyValue) {
 		}
 	};
 
+	this.setValue = function (val) {
+		throw 'setValue not implemented';
+	};
+
+	this.valueInternal = function () {
+		throw 'valueInternal not implemented';
+	};
+
+	this.definedInternal = function () {
+		throw 'definedInternal not implemented';
+	};
+
 };
 QLrt.BaseValueWidget.prototype = Object.create(QLrt.Child.prototype);
 
 
-QLrt.BooleanValueWidget = function () {
+QLrt.BooleanValueWidget = function (lazyValue) {
 
-	QLrt.BaseValueWidget.call(this);
+	QLrt.BaseValueWidget.call(this, lazyValue);
 
 	this.createElement = function () {
 		return QLrt.mk('input').attr('type', 'checkbox');
-	};
-
-	this.value = function () {
-		return this.domElement().prop('checked');
 	};
 
 	this.setValue = function (val) {
 		this.domElement().prop('checked', val);
 	};
 
-	this.defined = function () {
+	this.valueInternal = function () {
+		return this.domElement().prop('checked');
+	};
+
+	this.definedInternal = function () {
 		return true;
 	};
 
 };
-QLrt.BooleanValueWidget.prototype = Object.create(QLrt.Child.prototype);
+QLrt.BooleanValueWidget.prototype = Object.create(QLrt.BaseValueWidget.prototype);
 
 
 QLrt.MoneyValueWidget = function (lazyValue) {
@@ -75,36 +83,40 @@ QLrt.MoneyValueWidget = function (lazyValue) {
 		return QLrt.mk('input').attr('type', 'text').autoNumeric('init');
 	};
 
-	this.value = function (val) {
-		return this.domElement().autoNumeric('get');
-	};
-
 	this.setValue = function (val) {
 		this.domElement().autoNumeric('set', ( val === undefined ? '' : val ));
 	};
 
-	this.defined = function () {
-		return this.computed || (this.value() !== '');
+	this.valueInternal = function (val) {
+		return this.domElement().autoNumeric('get');
+	};
+
+	this.definedInternal = function () {
+		return (this.valueInternal() !== '');
 	};
 
 };
 QLrt.MoneyValueWidget.prototype = Object.create(QLrt.BaseValueWidget.prototype);
 
 
-QLrt.StringValueWidget = function () {
+QLrt.StringValueWidget = function (lazyValue) {
 
-	QLrt.Child.call(this);
+	QLrt.BaseValueWidget.call(this, lazyValue);
 
 	this.createElement = function () {
 		return QLrt.mk('input').attr('type', 'text');
 	};
 
-	this.value = function () {
+	this.setValue = function (val) {
+		this.domElement().val(val);
+	};
+
+	this.valueInternal = function () {
 		return this.domElement().val();
 	};
 
-	this.setValue = function (val) {
-		this.domElement().val(val);
+	this.definedInternal = function () {
+		return (this.valueInternal() !== '');
 	};
 
 };
