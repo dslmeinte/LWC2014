@@ -31,8 +31,7 @@ Inside the Eclipse project, the folder ```web``` contains everything that's rele
 
 ### Setup
 
-Run ```scripts/prepare.sh``` to download the correct versions of jQuery, Underscore.js and the ```autoNumeric``` jQuery plugin
-that takes care of formatting text inputs as monetary amounts.
+The sample questionnaires include links to online versions of jQuery, Undrscore.js and the ```autoNumeric``` plugin for jQuery. If you want to use local copies, you can run ```scripts/prepare.sh``` to download the correct versions of jQuery, Underscore.js and the ```autoNumeric``` jQuery plugin that takes care of formatting text inputs as monetary amounts.
 
 ### Contributing
 
