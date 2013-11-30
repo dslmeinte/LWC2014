@@ -165,3 +165,60 @@ QLrt.EnumValueWidget = function (enumeration, lazyValue) {
 };
 QLrt.EnumValueWidget.prototype = Object.create(QLrt.BaseValueWidget.prototype);
 
+
+QLrt.DateValueWidget = function (lazyValue) {
+
+	QLrt.BaseValueWidget.call(this, lazyValue);
+
+	this.createElement = function () {
+		return QLrt.mk('input').attr('type', 'text').datepicker();
+	};
+
+	this.setValue = function (val) {
+		this.domElement().val(val);
+	};
+
+	this.valueInternal = function (val) {
+		return this.domElement().val();
+	};
+
+	this.definedInternal = function () {
+		return (this.valueInternal() !== '');
+	};
+
+};
+QLrt.DateValueWidget.prototype = Object.create(QLrt.BaseValueWidget.prototype);
+
+
+QLrt.IntegerValueWidget = function (lazyValue) {
+
+	QLrt.BaseValueWidget.call(this, lazyValue);
+
+	this.createElement = function () {
+		return QLrt.mk('input').attr('type', 'number').keypress(checkCharacter);
+	};
+
+	var regex = /[0-9]/;
+
+	function checkCharacter (event) {
+		var key = String.fromCharCode(event.keyCode);
+		if (!regex.test(key)) {
+			event.preventDefault();
+		}
+	}
+
+	this.setValue = function (val) {
+		this.domElement().val(val);
+	};
+
+	this.valueInternal = function (val) {
+		return this.domElement().val();
+	};
+
+	this.definedInternal = function () {
+		return (this.valueInternal() !== '');
+	};
+
+};
+QLrt.IntegerValueWidget.prototype = Object.create(QLrt.BaseValueWidget.prototype);
+
