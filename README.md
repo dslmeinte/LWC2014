@@ -29,11 +29,6 @@ The repository contains (currently) one folder holding an Eclipse JavaScript pro
 It's not necessary to use Eclipse: you can view the project folder as the root for development.
 Inside the Eclipse project, the folder ```web``` contains everything that's relevant: the rest is purely for setup or Eclipse configuration.
 
-### Setup
-
-Run ```scripts/prepare.sh``` to download the correct versions of jQuery, Underscore.js and the ```autoNumeric``` jQuery plugin
-that takes care of formatting text inputs as monetary amounts.
-
 ### Contributing
 
 Participants of the Challenge are invited to contribute to this reference implementation, by the usual means:
