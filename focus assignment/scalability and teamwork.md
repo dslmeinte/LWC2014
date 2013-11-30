@@ -39,21 +39,22 @@ Of course, tax forms are different per country, and not completely trivial to re
 # Model size #
 In terms of scale and size, we'd like to see some input on questions like:
 
-* how long does it take to combine the parts of the questionnaire and build a working solution out of it?
-* what is the impact of increasing model size on compilation or interpretation times (linear, exponential, ...)
-* does the size of the model perceived responses and response  times for e.g. type checking or syntax colouring in the LWB?
-* in case of modularized models, what is the impact of the number and size of submodels on the aspects mentioned above?
+* How long does it take to combine the parts of the questionnaire and build a working solution out of it?
+* What is the impact of increasing model size on compilation or interpretation times (linear, exponential, ...)
+* Does the size of the model influence (perceived) response times for e.g. type checking or syntax colouring in the LWB?
+* In case of modularized models, what is the impact of the number and size of submodels on the aspects mentioned above?
 * What kind of support is in your LWB to minimize the actual impact of these effects?
 
-Using a tax for for that would be a good way, but very hard to compare across solutions from different countries.
-Therefore, we expect you to use a predefined model for this, based on a very simple case: a binary search tree questionnaire
+Using an existing tax form for this would be a good way, but very hard to compare across solutions from different countries.
+Therefore, we expect you to use a predefined model for this, based on a very simple case: a binary search tree questionnaire.
 
 *Binary search tree*
-Create a questionnaire that has to guess a number between a given input and output value, say 1..1000.
-The first question would then be 'is the answer between 1 and 500'?
-Depending on the outcome, the next question would be 'is the answer between 1 and 250', or 'is it between 500 and 750'? - and so on.
+Create a questionnaire that has to guess a number between a given input and output value, say 1..1023.
+The first question would then be 'is the answer between 1 and 511'?
+Depending on the outcome, the next question would be 'is the answer between 1 and 255', or 'is it between 512 and 1023'? - and so on.
 
 By having all questions be conditional and part of the QL model, this leads to large QL models that you can use to answer any scalability and performance questions in your LWB.
-To take it one step further, if your LWB supports model modularization (and most do, we think), also consider generating this as a model that consists of a main model, containing 100 questions, each related to 100 subquestions in a seperate questionnaire model.
+To take it one step further, if your LWB supports model modularization (and most do, we think), also consider generating this as a model that consists of a main model, containing 32 questions, each related to 32 subquestions in a separate questionnaire models.
 
-**NOTE:** keep in mind that modularizing the QL model for a questionnaire does not require you to generate a modular implementation of the resulting questionnaire. We know that anyone can do that with a little effort, focus should be on LWB aspects of scalability here. 
+**NOTE:** keep in mind that modularizing the QL model for a questionnaire does not require you to generate a modular implementation of the resulting questionnaire. We know that anyone can do that with a little effort, focus should be on LWB aspects of scalability here.
+
