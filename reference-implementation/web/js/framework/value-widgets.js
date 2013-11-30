@@ -211,7 +211,7 @@ QLrt.IntegerValueWidget = function (lazyValue) {
 		this.domElement().val(val);
 	};
 
-	this.valueInternal = function (val) {
+	this.valueInternal = function () {
 		return this.domElement().val();
 	};
 
@@ -221,4 +221,46 @@ QLrt.IntegerValueWidget = function (lazyValue) {
 
 };
 QLrt.IntegerValueWidget.prototype = Object.create(QLrt.BaseValueWidget.prototype);
+
+
+QLrt.DecimalValueWidget = function (lazyValue) {
+
+	QLrt.BaseValueWidget.call(this, lazyValue);
+
+	this.createElement = function () {
+		return QLrt.mk('input').attr('type', 'number').keypress(checkCharacter);
+	};
+
+	var regex = /[0-9]|\./;
+	var self = this;
+
+	function checkCharacter (event) {
+		var key = String.fromCharCode(event.keyCode);
+		if (key === '.') {
+			var val = self.valueInternal();
+			if (val === '') {
+				self.setValue('0');
+			} else {
+				if (!regex.test(key) || (key === '.' && val.indexOf('.') > -1)) {
+					event.preventDefault();
+				}
+			}
+		}
+	}
+
+	this.setValue = function (val) {
+		this.domElement().val(val);
+	};
+
+	this.valueInternal = function () {
+		return this.domElement().val();
+	};
+
+	this.definedInternal = function () {
+		return (this.valueInternal() !== '');
+	};
+
+};
+QLrt.DecimalValueWidget.prototype = Object.create(QLrt.BaseValueWidget.prototype);
+
 

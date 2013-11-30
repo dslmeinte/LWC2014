@@ -26,6 +26,11 @@ $(document).ready(function() {
 			new QLrt.LazyValue(function () { return [ integerValue ]; }, function (integerValue) { return integerValue !== undefined; }, true)
 		) }).appendTo(form);
 
+	var decimalValue = new QLrt.SimpleFormElementWidget({ name: "decimal value", label: "Decimal value:", valueWidget: new QLrt.DecimalValueWidget() }).appendTo(form);
+	new QLrt.SimpleFormElementWidget({ label: "decimal value defined?", valueWidget: new QLrt.BooleanValueWidget(
+			new QLrt.LazyValue(function () { return [ decimalValue ]; }, function (decimalValue) { return decimalValue !== undefined; }, true)
+		) }).appendTo(form);
+
 	$('#QL-content').append(form.domElement());
 	form.activate();
 
