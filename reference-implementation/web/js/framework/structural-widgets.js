@@ -14,7 +14,7 @@ QLrt.FormWidget = function (settings) {
 		throw 'invalid or incomplete settings';
 	}
 
-	var outerContainer = QLrt.mk('div').hide().append(QLrt.mk('h2').text('Form: ' + settings.name));
+	var outerContainer = QLrt.mk('div', 'formcontainer').hide().append(QLrt.mk('h2').text('Form: ' + settings.name));
 	var innerContainer = QLrt.mk('div', 'form').appendTo(outerContainer);
 	var submitButton = QLrt.mk('button').prop('disabled', true).append('Submit').appendTo(outerContainer).click(function () { settings.submitCallback(asJSON()); });
 
