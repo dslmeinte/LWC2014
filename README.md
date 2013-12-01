@@ -172,8 +172,8 @@ One only has to use "funky" when for some combinations/ranges of input, it doesn
 (e.g. using shortcutting boolean operators, and/or in pathological cases such as multiplying with 0),
 or when some expression explicitly depends on an input being defined or not.
 
-The reason for using a dependent values _function_, instead of direct references to variables,
+The main reason for using a dependent values _function_, instead of direct references to variables,
 is that it relieves the form builder of the need to make sure widgets are instantiated before they're referenced in an expression function.
 This is particularly necessary because of the _variable hoisting_ that JS does.
 The other reason is that it makes the expression function's code look much better, because it's not (always) necessary to test for definedness and postfix with ```.value()```.
-
+Also, this gives the code a sort of a monadicky feel :)
