@@ -7,19 +7,19 @@ Specifically, it implements the example questionnaire shown in the assignment.
 
 ## Status
 
-**Status of implementation**: under construction/work-in-progress/not complete, but releasable
+**Status of implementation**: released, but extendable
 
 Particular **TODO**s:
 
 * Styling of widgets, through ```web/css/QL.css```.
-* Implementation of more value widgets: currently only implemented for boolean, money and string, not: enum, integer, etc.
+* Implementation of value widgets specifically for QLS: either new value widgets, or add styling options to existing ones
 * More documentation of the framework, also as JSdoc.
 
 
 ## Disclaimer
 
 The reference implementation is provided _as-is_.
-The LWC 2013 programming committee retains the right to change and expand the code throughout the following months.
+The LWC programming committee retains the right to change and expand the code throughout the following months.
 However, the committee will try to keep the API stable.
 
 
@@ -108,7 +108,7 @@ This is actually the only API you need to know about to build forms.
 
 If a lazy value is given, the form element is regarded to be _computed_ which results in the input element being disabled and the value not passed into the form data object upon submitting the form.
 
-#### Roling your own
+#### Rolling your own
 
 For both QL and especially QLS we need several value widgets.
 To create your own, follow the following template (fill in the TODOs):
