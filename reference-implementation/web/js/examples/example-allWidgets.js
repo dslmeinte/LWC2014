@@ -31,6 +31,11 @@ $(document).ready(function() {
 			new QLrt.LazyValue(function () { return [ decimalValue ]; }, function (decimalValue) { return decimalValue !== undefined; }, true)
 		) }).appendTo(form);
 
+	var integerRangeValue = new QLrt.SimpleFormElementWidget({ name: "integer range value", label: "Integer range value:", valueWidget: new QLrt.RangeValueWidget({ min: 0, max: 10, type: 'integer' }) }).appendTo(form);
+	new QLrt.SimpleFormElementWidget({ label: "integer range value", valueWidget: new QLrt.IntegerValueWidget(
+			new QLrt.LazyValue(function () { return [ integerRangeValue ]; }, function (integerValue) { return integerValue; }, true)
+		) }).appendTo(form);
+
 	$('#QL-content').append(form.domElement());
 	form.activate();
 

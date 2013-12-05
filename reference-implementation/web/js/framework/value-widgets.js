@@ -16,7 +16,8 @@ QLrt.BaseValueWidget = function (lazyValue) {
 
 	this.domElement = function () {
 		if (elt === null) {
-			elt = this.createElement().prop('disabled', this.computed).change(this.signalChange);
+			elt = this.createElement(this.signalChange).prop('disabled', this.computed).change(this.signalChange);
+				// this.signalChange is passed as a callback in case the element created doesn't support .change(..)
 		}
 		return elt;
 	};
@@ -262,5 +263,44 @@ QLrt.DecimalValueWidget = function (lazyValue) {
 
 };
 QLrt.DecimalValueWidget.prototype = Object.create(QLrt.BaseValueWidget.prototype);
+
+
+QLrt.RangeValueWidget = function (settings, lazyValue) {
+
+	QLrt.BaseValueWidget.call(this, lazyValue);
+
+	var self = this;
+	this.createElement = function (changeCallback) {
+		var sliderSettings = {
+			min:	settings.min,
+			max:	settings.max,
+			slide:	function (event, ui) {
+						changeCallback.call(self);
+					}
+		};
+		if (settings.step !== undefined) {
+			sliderSettings.step = settings.step;
+		} else {
+			if (settings.type === 'integer') {
+				sliderSettings.step = 1;
+			}
+		}
+		return QLrt.mk('div').slider(sliderSettings);
+	};
+
+	this.setValue = function (val) {
+		this.domElement().slider("value", val);
+	};
+
+	this.valueInternal = function () {
+		return this.domElement().slider("value");
+	};
+
+	this.definedInternal = function () {
+		return true;
+	};
+
+};
+QLrt.RangeValueWidget.prototype = Object.create(QLrt.BaseValueWidget.prototype);
 
 
