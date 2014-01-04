@@ -2,7 +2,7 @@ Language Workbench Challenge 2014
 =================================
 
 This repository holds the _reference implementation_ for the semantics of the QL and QLS languages,
-as defined in the [assignment](http://www.languageworkbenches.net/wp-content/uploads/2013/11/Call-for-Participation.pdf).
+as defined in the [assignment](http://www.languageworkbenches.net/wp-content/uploads/2013/11/Call-for-Participation1.pdf).
 Specifically, it implements the example questionnaire shown in the assignment.
 
 ## Status
