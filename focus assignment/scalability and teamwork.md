@@ -49,9 +49,9 @@ Using an existing tax form for this would be a good way, but very hard to compar
 Therefore, we expect you to use a predefined model for this, based on a very simple case: a binary search tree questionnaire.
 
 *Binary search tree*
-Create a questionnaire that has to guess a number between a given input and output value, say 1..1023.
-The first question would then be 'is the answer between 1 and 511'?
-Depending on the outcome, the next question would be 'is the answer between 1 and 255', or 'is it between 512 and 1023'? - and so on.
+Create a questionnaire that has to guess a number between a given input and output value, say 1..1024 (inclusive - from now on, this is implied).
+The first question would then be 'is the answer between 1 and 512'?
+Depending on the outcome, the next question would be 'is the answer between 1 and 256', or 'is it between 513 and 768'? - and so on.
 
 By having all questions be conditional and part of the QL model, this leads to large QL models that you can use to answer any scalability and performance questions in your LWB.
 To take it one step further, if your LWB supports model modularization (and most do, we think), also consider generating this as a model that consists of a main model, containing 32 questions, each related to 32 subquestions in a separate questionnaire models.
