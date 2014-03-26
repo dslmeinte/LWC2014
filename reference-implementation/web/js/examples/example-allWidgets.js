@@ -36,6 +36,11 @@ $(document).ready(function() {
 			new QLrt.LazyValue(function () { return [ integerRangeValue ]; }, function (integerValue) { return integerValue; }, true)
 		) }).appendTo(form);
 
+	var booleanValue = new QLrt.SimpleFormElementWidget({ name: "boolean value", label: "Boolean value:", valueWidget: new QLrt.BooleanValueWidget() }).appendTo(form);
+	new QLrt.SimpleFormElementWidget({ label: "boolean value defined?", valueWidget: new QLrt.BooleanValueWidget(
+			new QLrt.LazyValue(function () { return [ booleanValue ]; }, function (booleanValue) { return booleanValue !== undefined; }, true)
+		) }).appendTo(form);
+
 	$('#QL-content').append(form.domElement());
 	form.activate();
 

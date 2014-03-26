@@ -52,24 +52,38 @@ QLrt.BaseValueWidget = function (lazyValue) {
 QLrt.BaseValueWidget.prototype = Object.create(QLrt.Child.prototype);
 
 
+QLrt.uniqueId = 0;
+
 QLrt.BooleanValueWidget = function (lazyValue) {
 
 	QLrt.BaseValueWidget.call(this, lazyValue);
 
+	var selectTrue = null, selectFalse = null;
+
 	this.createElement = function () {
-		return QLrt.mk('input').attr('type', 'checkbox');
+		var span = QLrt.mk('span');
+		var currentUniqueId = QLrt.uniqueId++;
+		selectTrue = QLrt.mk('input').attr('type', 'radio').attr('name', 'boolean-widget-uid-' + currentUniqueId);
+		selectFalse = QLrt.mk('input').attr('type', 'radio').attr('name', 'boolean-widget-uid-' + currentUniqueId);
+		span.append(wrapInLabel(selectTrue, "true")).append(wrapInLabel(selectFalse, "false"));
+		return span;
 	};
 
+	function wrapInLabel (elt, labelText) {
+		return QLrt.mk('label').append(labelText).append(elt);
+	}
+
 	this.setValue = function (val) {
-		this.domElement().prop('checked', val);
+		selectTrue.prop('checked', val);
+		selectFalse.prop('checked', !val);
 	};
 
 	this.valueInternal = function () {
-		return this.domElement().prop('checked');
+		return selectTrue.prop('checked');
 	};
 
 	this.definedInternal = function () {
-		return true;
+		return selectTrue.prop('checked') || selectFalse.prop('checked');
 	};
 
 };
