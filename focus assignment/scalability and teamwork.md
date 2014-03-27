@@ -52,6 +52,7 @@ Therefore, we expect you to use a predefined model for this, based on a very sim
 Create a questionnaire that has to guess a number between a given input and output value, say 1..1024 (inclusive - from now on, this is implied).
 The first question would then be 'is the answer between 1 and 512'?
 Depending on the outcome, the next question would be 'is the answer between 1 and 256', or 'is it between 513 and 768'? - and so on.
+The last question should be "Is the number 42?" (instead of "Is the number between 42 and 42?"), after which the questionnaire should report the guessed number.
 
 By having all questions be conditional and part of the QL model, this leads to large QL models that you can use to answer any scalability and performance questions in your LWB.
 To take it one step further, if your LWB supports model modularization (and most do, we think), also consider generating this as a model that consists of a main model, containing 32 questions, each related to 32 subquestions in a separate questionnaire models.
