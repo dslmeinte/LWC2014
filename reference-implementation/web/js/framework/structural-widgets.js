@@ -133,7 +133,8 @@ QLrt.SimpleFormElementWidget = function (settings) {
     }
 
     var outerContainer = QLrt.mk('div', 'simpleFormElement');
-    QLrt.mk('label').appendTo(outerContainer).append(settings.label).append(settings.valueWidget.domElement());
+    var usesRadioButtons = settings.valueWidget instanceof QLrt.BooleanValueWidget;
+    QLrt.mk(usesRadioButtons ? 'span' : 'label').appendTo(outerContainer).append(settings.label).append(settings.valueWidget.domElement());
 
     this.domElement = function () {
         return outerContainer;
