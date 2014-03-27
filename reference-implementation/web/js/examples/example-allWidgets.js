@@ -5,7 +5,7 @@ $(document).ready(function() {
 	new QLrt.TextWidget({ text: "This form contains an example for each of the available widgets." }).appendTo(form);
 
 	var valueSection = new QLrt.SectionWidget({ label: "Value input" }).appendTo(form);
-	var computedSection = new QLrt.SectionWidget({ label: "Computed values (definedness-check" }).appendTo(form);
+	var computedSection = new QLrt.SectionWidget({ label: "Computed values (definedness-check)" }).appendTo(form);
 
 	var stringValue = new QLrt.SimpleFormElementWidget({ name: "string value", label: "String value:", valueWidget: new QLrt.StringValueWidget()}).appendTo(valueSection);
 	new QLrt.SimpleFormElementWidget({ label: "string defined?", valueWidget: new QLrt.BooleanValueWidget(

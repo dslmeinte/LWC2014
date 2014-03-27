@@ -63,14 +63,19 @@ QLrt.BooleanValueWidget = function (lazyValue) {
 	this.createElement = function () {
 		var span = QLrt.mk('span');
 		var currentUniqueId = QLrt.uniqueId++;
-		selectTrue = QLrt.mk('input').attr('type', 'radio').attr('name', 'boolean-widget-uid-' + currentUniqueId);
-		selectFalse = QLrt.mk('input').attr('type', 'radio').attr('name', 'boolean-widget-uid-' + currentUniqueId);
-		span.append(wrapInLabel(selectTrue, "true")).append(wrapInLabel(selectFalse, "false"));
+		var groupId = 'boolean-widget-uid-' + currentUniqueId;
+		selectTrue = mkRadio(groupId, 'true');
+		selectFalse = mkRadio(groupId, 'false');
+		span.append(selectTrue, mkLabel('true', groupId + '_true'), selectFalse, mkLabel('false', groupId + '_false'));
 		return span;
 	};
 
-	function wrapInLabel (elt, labelText) {
-		return QLrt.mk('label').append(labelText).append(elt);
+	function mkRadio (groupId, val) {
+		return QLrt.mk('input').attr('type', 'radio').attr('name', groupId).attr('id', groupId + '_' + val);
+	}
+
+	function mkLabel (labelText, id) {
+		return QLrt.mk('label').append(labelText).attr('for', id);
 	}
 
 	this.setValue = function (val) {
