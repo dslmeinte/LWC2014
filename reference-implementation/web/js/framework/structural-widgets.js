@@ -94,7 +94,7 @@ QLrt.ConditionalGroupWidget = function (lazyValue) {
 
     this.update = function () {
         var value = lazyValue.evaluate();
-        container.toggle(value);
+        container.toggle(!!value);
         if (value) {
             _.each(children, function (subWidget) {
                 subWidget.update();
@@ -105,7 +105,7 @@ QLrt.ConditionalGroupWidget = function (lazyValue) {
     this.asJSON = function () {
         var result = {};
 
-        if (lazyValue.evaluate()) {
+        if (!!lazyValue.evaluate()) {
             _.each(children, function (subWidget) {
                 _.extend(result, subWidget.asJSON());
             });
@@ -204,8 +204,7 @@ QLrt.ConditionalFormElementWidget = function (settings) {
 
     this.update = function () {
         var value = settings.lazyValue.evaluate();
-
-        outerContainer.toggle(value);
+        outerContainer.toggle(!!value);
         if (value) {
             settings.valueWidget.update();
         }
