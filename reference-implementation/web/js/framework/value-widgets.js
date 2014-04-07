@@ -100,7 +100,7 @@ QLrt.MoneyValueWidget = function (lazyValue) {
 	QLrt.BaseValueWidget.call(this, lazyValue);
 
 	this.createElement = function () {
-		return QLrt.mk('input').attr('type', 'text').autoNumeric('init');
+		return QLrt.mk('input').attr('type', 'text').autoNumeric('init', { vMin: '-999999999.99' });
 	};
 
 	this.setValue = function (val) {
